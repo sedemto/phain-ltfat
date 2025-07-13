@@ -3,7 +3,7 @@
 %                   PHASE-AWARE AUDIO INPAINTING (PHAIN)                  %
 %           remade using the LTFAT library (only includes U-PHAIN)        %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % MIT License
+% MIT License
 % 
 % Copyright (c) 2023 TomoroTanaka
 % 
@@ -25,14 +25,14 @@
 %
 % the main difference between LTFAT PHAIN and the original PHAIN code is in
 % the "parameters" section, specifically the setup of a tight window and DGT
-tic
+
 close all
 clear
 clc
 ltfatstart
 rng(0)
 
-
+addpath(genpath('../dataset/'))
 %% loading
 soundDir = "../dataset/DPAI_originals/";
 ext = ".wav";
@@ -178,7 +178,7 @@ for nn = 1:NN
             %%%%%%%%%%%%%%%%%%%%%%%%%%% U-PHAIN %%%%%%%%%%%%%%%%%%%%%%%%%%%
             
             fprintf('U-PHAIN...\n')
-            % tic
+            tic
             param.type = 'U';
             paramsolver.I = 100;
             paramsolver.J = 10;
@@ -188,7 +188,7 @@ for nn = 1:NN
             
                     
             solution.U_PHAIN{nn, m}(idx) = segment.solution(st:ed)*segment.max;
-            % TIME(nn, m, n, 1) = toc;
+            TIME(nn, m, n, 1) = toc;
 
         end
    
@@ -222,7 +222,7 @@ ylabel('SNR at gaps [dB]', Interpreter = 'latex')
 ax = gca;
 ax.FontSize = 15;
 ax.TickLabelInterpreter = 'latex';
-toc
+
 
 %% functions
 % MIT License
