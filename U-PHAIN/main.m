@@ -1,24 +1,40 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                         %
 %                   PHASE-AWARE AUDIO INPAINTING (PHAIN)                  %
-%                                                                         %
+%           remade using the LTFAT library (only includes U-PHAIN)        %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % MIT License
+% 
+% Copyright (c) 2023 TomoroTanaka
+% 
+% Permission is hereby granted, free of charge, to any person obtaining a copy
+% of this software and associated documentation files (the "Software"), to deal
+% in the Software without restriction, including without limitation the rights
+% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+% copies of the Software, and to permit persons to whom the Software is
+% furnished to do so, subject to the following conditions:
+% 
+% The above copyright notice and this permission notice shall be included in all
+% copies or substantial portions of the Software.
 
+%   [1] Tanaka, Tomoro, Kohei Yatabe, and Yasuhiro Oikawa,"PHAIN: Audio
+%       inpainting via phase-aware optimization with instantaneous frequency,"
+%       IEEE/ACM Transactions on Audio, Speech, and Language Processing, Sep 2024.
+%
+% all sections except "functions" were adapted from main.m in [1]
+%
+% the main difference between LTFAT PHAIN and the original PHAIN code is in
+% the "parameters" section, specifically the setup of a tight window and DGT
+tic
 close all
 clear
 clc
 ltfatstart
 rng(0)
 
-%% paths
-
-addpath(genpath('dataset'))
-addpath('utils')
-addpath(genpath('phase_correction'));
-addpath('PHAIN');
 
 %% loading
-soundDir = "dataset/DPAI_originals/";
+soundDir = "../dataset/DPAI_originals/";
 ext = ".wav";
 Sounds = dir(soundDir + "*" + ext);
 NN = length(Sounds);
@@ -33,19 +49,19 @@ clear audio info
 %% settings
      
 gaps = 5:5:50; % [ms]
-M = length(gaps);
+gapNum = length(gaps);
 
 N = 8; % # of gaps
 
 methodLabels = {'U_PHAIN'};
 
 for i = 1:length(methodLabels)
-    solution.(methodLabels{i}) = cell(NN, M);  % initialization of restored results
+    solution.(methodLabels{i}) = cell(NN, gapNum);  % initialization of restored results
 end
 
-SNR  = NaN(NN, M, N, length(methodLabels));  % SNR per gap
-TIME = NaN(NN, M, N, length(methodLabels));  % execution time per gap
-SNR_procedure = cell(NN, M, N, length(methodLabels));  % iterative behavior
+SNR  = NaN(NN, gapNum, N, length(methodLabels));  % SNR per gap
+TIME = NaN(NN, gapNum, N, length(methodLabels));  % execution time per gap
+SNR_procedure = cell(NN, gapNum, N, length(methodLabels));  % iterative behavior
 
 %% parameters
 
@@ -59,15 +75,15 @@ phasetype = 0; % 0-freqinv, 1-timeinv
 % setup tight window and its derivative 
 g = gabtight(wtype, a, M, w);
 
-% if wtype == "hann"
-%     % derivative of Hann window
-%     x = (0:w-1)'/(w);
-%     g_diff = -0.5*sin(2*pi.*x)*max(g);
-% else 
-%     % for other window functions
-%     g_diff = numericalDiffWin(g);
-% end
-g_diff = numericalDiffWin(g);
+if wtype == "hann"
+    % derivative of Hann window
+    x = (0:w-1)'/(w);
+    g_diff = -0.5*sin(2*pi.*x)*max(g);
+else 
+    % for other window functions
+    g_diff = numericalDiffWin(g);
+end
+% g_diff = numericalDiffWin(g);
 
 % setup DGT, invDGT and derivative of DGT using LTFAT
 param.G = @(x) comp_sepdgtreal(x, g, a, M, phasetype);
@@ -98,7 +114,7 @@ for nn = 1:NN
 
     signal = data{nn};
 
-    for m = 1:M
+    for m = 1:gapNum
 
         fprintf('\nSignal: %d / %d', nn, NN)
         fprintf('\nGap Length: %d [ms]\n', gaps(m))
@@ -162,7 +178,7 @@ for nn = 1:NN
             %%%%%%%%%%%%%%%%%%%%%%%%%%% U-PHAIN %%%%%%%%%%%%%%%%%%%%%%%%%%%
             
             fprintf('U-PHAIN...\n')
-            tic
+            % tic
             param.type = 'U';
             paramsolver.I = 100;
             paramsolver.J = 10;
@@ -172,7 +188,7 @@ for nn = 1:NN
             
                     
             solution.U_PHAIN{nn, m}(idx) = segment.solution(st:ed)*segment.max;
-            TIME(nn, m, n, 1) = toc;
+            % TIME(nn, m, n, 1) = toc;
 
         end
    
@@ -198,15 +214,15 @@ snr_vec = squeeze(median(SNR, [1,3]));
 figure(Position = [614 157 873 830])
 p = plot(snr_vec, LineWidth = 2);
 grid on
-legend({"B-PHAIN", "B-PHAIN (oracle)", "R-PHAIN", "R-PHAIN (oracle)", "UR-PHAIN", "U-PHAIN"}, Interpreter = 'latex')
+legend({"U-PHAIN"}, Interpreter = 'latex')
 xlabel('gap length 5:5:50 [ms]', Interpreter = 'latex')
-xticks = 1:3;
+xticks = 1:10;
 xticklabels = {"5", "10", "15", "20", "25", "30", "35", "40", "45", "50"};
 ylabel('SNR at gaps [dB]', Interpreter = 'latex')
 ax = gca;
 ax.FontSize = 15;
 ax.TickLabelInterpreter = 'latex';
-
+toc
 
 %% functions
 % MIT License
@@ -268,21 +284,21 @@ function spec = invInstPhaseCorrection(iPCspec,IF,shiftLen,fftLen)
 end
 
 function diffWin = numericalDiffWin(window,zeroPadLen)
-% Zero-padding for alleviating the periodic boundary effect
-if ~exist('zeroPadLen','var') || isempty(zeroPadLen)
-    zeroPadLen = 0;
-end
-longWin = [window; zeros(zeroPadLen,1)]; % zero-padding
-
-% Generating the frequency vector (index) for spectral derivative
-winLen = length(window);
-longLen = length(longWin);
-M = floor((longLen-1)/2);
-
-fftIdx = ifftshift([zeros(mod(longLen-1,2)),-M:M]); % index generation
-fftIdx = fftIdx(:)*winLen/longLen; % normalization
-
-% Calculating spectral derivative
-diffWin = ifft(1i*fftIdx.*fft(longWin),'symmetric'); % spectral method
-diffWin = diffWin(1:winLen); % truncating padded zeros
+    % Zero-padding for alleviating the periodic boundary effect
+    if ~exist('zeroPadLen','var') || isempty(zeroPadLen)
+        zeroPadLen = 0;
+    end
+    longWin = [window; zeros(zeroPadLen,1)]; % zero-padding
+    
+    % Generating the frequency vector (index) for spectral derivative
+    winLen = length(window);
+    longLen = length(longWin);
+    M = floor((longLen-1)/2);
+    
+    fftIdx = ifftshift([zeros(mod(longLen-1,2)),-M:M]); % index generation
+    fftIdx = fftIdx(:)*winLen/longLen; % normalization
+    
+    % Calculating spectral derivative
+    diffWin = ifft(1i*fftIdx.*fft(longWin),'symmetric'); % spectral method
+    diffWin = diffWin(1:winLen); % truncating padded zeros
 end
