@@ -1,5 +1,5 @@
 # PHAIN implementation using LTFAT
-A slighty faster version of PHAIN [1].
+Computationally faster version of PHAIN [1].
 ## Goal
 Reimplement PHAIN [1,2] such that fast routines of the LTFAT time-frequency toolbox [3] are utilized, resulting in a lower computational time while maintaining the reconstruction quality.
 
@@ -12,10 +12,11 @@ Beware that the original code treats the signal as non-periodic, while it is con
 ## Experiment
 The experiment was run to prove the goals, i.e. speedup not affecting the quality. The original and the optimized implementation was run on the same signal with the same gaps in the signal. Elepsed time was measured by the tic/toc commands, and the reconstruction quality was measured using the SNR only in the gaps.
 
+The tests were run on signals from 
 ...
 ...
 
-Tests were run in Matlab 2024b on PC with Intel Core i7-6829HQ CPU @2.7GHz, 16 GB RAM and Windows 10.
+Tests were run in Matlab 2024b on PC with Intel Core i7-6829HQ CPU @2.7GHz, 16 GB RAM and Windows 10. The Matlab codes use the LTFAT [3] and Signal Processing Toolbox.
 
 ## References
 [1] Tanaka, Tomoro, Kohei Yatabe, and Yasuhiro Oikawa, “PHAIN: Audio inpainting via phase-aware optimization with instantaneous frequency,” IEEE/ACM Transactions on Audio, Speech, and Language Processing, Sep 2024.
