@@ -6,7 +6,7 @@ Reimplement PHAIN [1,2] such that fast routines of the LTFAT time-frequency tool
 ## Work done
 - Functions for the Gabor transform were substituted by optimized routines from the LTFAT toolbox. Computation of the Gabor transform is about 35 % faster this way, resulting in approximately **10 % total speedup** of PHAIN.
 Beware that the original code treats the signal as non-periodic, while it is considered periodic by LTFAT. In effect, if a gap would be present near the signal border, the reconstruction would be different; otherwise, the results are identical (see demo below).
-- Projection to the reliable set has also been substituted by a more efficient code improving its calculation by approximately 70 %. However, this improvement does not effect the total speedup due to its already fast computational speed. 
+- Projection to the reliable set has also been substituted by a more efficient code improving its computational speed by approximately 70 %. However, this improvement does not effect the total speedup due to its already fast computation. 
 - paramsolver.x0?
 
 ## Experiment
