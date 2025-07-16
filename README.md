@@ -16,7 +16,7 @@ The tests were run on signals from
 ...
 ...
 
-Tests were run in Matlab 2024b on PC with Intel Core i7-6829HQ CPU @2.7GHz, 16 GB RAM and Windows 10. The Matlab codes use the LTFAT [3] and Signal Processing Toolbox.
+Tests were run in Matlab 2024b on PC with Intel Core i7-6829HQ CPU @2.7GHz, 16 GB RAM and Windows 10. The Matlab codes use the Signal Processing Toolbox and LTFAT [3].
 
 ## References
 [1] Tanaka, Tomoro, Kohei Yatabe, and Yasuhiro Oikawa, “PHAIN: Audio inpainting via phase-aware optimization with instantaneous frequency,” IEEE/ACM Transactions on Audio, Speech, and Language Processing, Sep 2024.
