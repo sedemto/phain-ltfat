@@ -14,8 +14,7 @@ The experiment was run to prove the goals, i.e. speedup not affecting the qualit
 
 The tests were run on signals from DPAI dataset available in `dataset` folder. Multiple tests were done:
 - to compare the difference in speed between the DGT from LTFAT and the DGT from the original code run **demo_DGT.mat** in `demos` folder
-|--------------| DGT | inverse DGT| both|
-|--------------|-------------------------------------------------------|-----------------------------------------------------------|-----------------------------------------------------------|
+
 | Test Number | DGT Original [s] | DGT LTFAT [s] | DGT Improvement [%] | iDGT Original [s] | iDGT LTFAT [s] | iDGT Improvement [%] | Both Original [s] | Both LTFAT [s] | Both Improvement [%] |
 |--------------|------------------|---------------|---------------------|------------------|---------------|---------------------|------------------|---------------|---------------------|
 | 1            | 4.2116           | 2.2901       | 45.6249            | 5.1495           | 2.2625       | 56.0634            | 9.3007           | 4.4351       | 52.3139            |
@@ -29,6 +28,7 @@ The tests were run on signals from DPAI dataset available in `dataset` folder. M
 | 9            | 3.9556           | 2.2343       | 43.5145            | 4.6164           | 2.4551       | 46.8176            | 8.9491           | 4.6126       | 48.4828            |
 | 10           | 4.0874           | 2.2765       | 44.3031            | 4.7099           | 2.2437       | 52.3615            | 8.9211           | 4.4772       | 49.8134            |
 | **Average**  | 4.1697           | 2.3162   |**44.3590**       | 4.8906       | 2.3581   | **51.7449 **      | 9.2955       | 4.7995   | **48.2878**      |
+
 ...
 
 Tests were run in Matlab 2024b on PC with Intel Core i7-6829HQ CPU @2.7GHz, 16 GB RAM and Windows 10. The Matlab codes use the Signal Processing Toolbox and LTFAT [3].
