@@ -14,7 +14,8 @@ The experiment was run to prove the goals, i.e. speedup not affecting the qualit
 
 The tests were run on signals from DPAI dataset available in `dataset` folder. Multiple tests were done:
 - to compare the difference in speed between the DGT from LTFAT and the DGT from the original code run **demo_DGT.mat** in `demos` folder
-  
+|--------------| DGT | inverse DGT| both|
+|--------------|-------------------------------------------------------|-----------------------------------------------------------|-----------------------------------------------------------|
 | Test Number | DGT Original [s] | DGT LTFAT [s] | DGT Improvement [%] | iDGT Original [s] | iDGT LTFAT [s] | iDGT Improvement [%] | Both Original [s] | Both LTFAT [s] | Both Improvement [%] |
 |--------------|------------------|---------------|---------------------|------------------|---------------|---------------------|------------------|---------------|---------------------|
 | 1            | 4.2116           | 2.2901       | 45.6249            | 5.1495           | 2.2625       | 56.0634            | 9.3007           | 4.4351       | 52.3139            |
