@@ -1,4 +1,5 @@
 # PHAIN implementation using LTFAT
+A slighty faster version of PHAIN [1].
 ## Goal
 Reimplement PHAIN [1,2] such that fast routines of the LTFAT time-frequency toolbox [3] are utilized, resulting in a lower computational time while maintaining the reconstruction quality.
 
