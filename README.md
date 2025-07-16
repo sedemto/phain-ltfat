@@ -19,6 +19,6 @@ Tests were run in Matlab 2024b on PC with Intel Core i7-6829HQ CPU @2.7GHz, 16 G
 ## References
 [1] Tanaka, Tomoro, Kohei Yatabe, and Yasuhiro Oikawa, “PHAIN: Audio inpainting via phase-aware optimization with instantaneous frequency,” IEEE/ACM Transactions on Audio, Speech, and Language Processing, Sep 2024.
 
-[2] TomoroTanaka, “TomoroTanaka/PHAIN: v1.0.1”. Zenodo, Jun. 30, 2024. doi: 10.5281/zenodo.12597334.
+[2] TomoroTanaka, “TomoroTanaka/PHAIN: v1.0.1”. Zenodo, Jun. 30, 2024. doi:10.5281/zenodo.12597334.
 
 [3] Zdeněk Průša, Peter L. Søndergaard, Nicki Holighaus, Christoph Wiesmeyr, Peter Balazs, “The Large Time-Frequency Analysis Toolbox 2.0,” Sound, Music, and Motion, Lecture Notes in Computer Science 2014, pp 419-442.
