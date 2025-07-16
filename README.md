@@ -15,7 +15,9 @@ The experiment was run to prove the goals, i.e. speedup not affecting the qualit
 
 
 The tests were run on signals from DPAI dataset available at [DPAI](https://github.com/fmiotello/dpai). Multiple tests were done, all codes available in the `demos` folder :
-- to compare the difference in speed between the DGT from LTFAT and the DGT from the original code run `demo_DGT.mat`. The table below is acquired. 
+- to prove that the reconstruction quality is the same for both implementations the `demo_reconstruction.m` can be run. It produces the following image:
+  
+- to compare the difference in speed between the DGT from LTFAT and the DGT from the original code run `demo_DGT.m`. The table below is acquired. 
 
 | Test Number | DGT Original code [s] | DGT LTFAT code [s] | DGT Improvement [%] | iDGT Original code [s] | iDGT LTFAT code [s] | iDGT Improvement [%] | Both Original code [s] | Both LTFAT code [s] | Both Improvement [%] |
 |:--------------:|:------------------:|:---------------:|:---------------------:|:------------------:|:---------------:|:---------------------:|:------------------:|:---------------:|:---------------------:|
@@ -31,14 +33,14 @@ The tests were run on signals from DPAI dataset available at [DPAI](https://gith
 | 10           | 4.0874           | 2.2765       | 44.3031            | 4.7099           | 2.2437       | 52.3615            | 8.9211           | 4.4772       | 49.8134            |
 | **Average**  | 4.1697           | 2.3162   |**44.3590**       | 4.8906       | 2.3581   | **51.7449**      | 9.2955       | 4.7995   | **48.2878**      |
 
-- to compare the differences between the projections a small demo called `demo_proj.mat` was used.
+- to compare the differences between the projections a small demo called `demo_proj.m` was used.
 - comparison between a signal with the parameter `updateInputCP = false` and `updateInputCP = true`:
-<img width="1920" height="973" alt="diffWithWithoutUpdate" src="https://github.com/user-attachments/assets/7594183b-ae3c-4104-8628-f25465990e32" />
+<img width="1920" height="973" alt="diffWithWithoutUpdate" src="https://github.com/user-attachments/assets/0c148e33-5230-4809-bcf6-a035377c6256" />
 
-...
 
 
 Even though LTFAT has functions for the calculation of instantaneous frequency, the original functions "calcInstFreq", "instPhaseCorrection" and "invInstPhaseCorrection" from [1] were utilized due to faster computational time.
+
 Tests were run in Matlab 2024b on PC with Intel Core i7-6829HQ CPU @2.7GHz, 16 GB RAM and Windows 10. The Matlab codes use the Signal Processing Toolbox and LTFAT [3].
 
 ## References
