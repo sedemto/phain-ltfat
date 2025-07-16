@@ -15,7 +15,7 @@ The experiment was run to prove the goals, i.e. speedup not affecting the qualit
 
 
 The tests were run on signals from DPAI dataset available at [DPAI](https://github.com/fmiotello/dpai). Multiple tests were done, all codes available in the `demos` folder :
-- To prove that the reconstruction quality is the same for both implementations the `demo_reconstruction.m` can be run. It also computes the SNR of both reconstructions, measures the execution time for both implemetations, and produces the following image:
+- To prove that the reconstruction quality is the same for both implementations the `demo_reconstruction.m` can be run. It also computes the SNR of both reconstructions, measures their execution time, and produces the following image:
   <img width="1920" height="973" alt="comparisonLTFATvsOriginalpng" src="https://github.com/user-attachments/assets/93469f57-eb27-445b-a819-16ea215d6e02" />
 
 - To compare the difference in speed between the DGT from LTFAT and the DGT from the original code run `demo_DGT.m`. The table below is acquired, which shows that on average the LTFAT implementaion is about 48 % faster. 
