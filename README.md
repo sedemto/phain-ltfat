@@ -34,7 +34,7 @@ The tests were run on signals from DPAI dataset available at [DPAI](https://gith
 | **Average**  | 4.1697           | 2.3162   |**44.3590**       | 4.8906       | 2.3581   | **51.7449**      | 9.2955       | 4.7995   | **48.2878**      |
 
 - to compare the differences between the projections a small demo called `demo_proj.m` was used.
-- comparison between a signal with the parameter `updateInputCP = false` and `updateInputCP = true`:
+- comparison between a signal with the parameter `updateInputCP = false` (blue) and `updateInputCP = true` (orange):
 <img width="1920" height="973" alt="diffWithWithoutUpdate" src="https://github.com/user-attachments/assets/0c148e33-5230-4809-bcf6-a035377c6256" />
 
 
