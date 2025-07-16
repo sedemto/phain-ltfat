@@ -29,7 +29,6 @@ sigma = paramsolver.sigma;
 alpha = paramsolver.alpha;
 
 snr_procedure = NaN(paramsolver.I, 1);
-
 %% iteration
 
 for i = 1:paramsolver.I
@@ -42,5 +41,4 @@ for i = 1:paramsolver.I
     u = u + alpha*(q - u);
     
     snr_procedure(i) = snr(oracle(~mask),oracle(~mask)- x(~mask));
-
 end

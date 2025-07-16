@@ -41,10 +41,8 @@ function [outsig, snr_procedure] = UPHAIN_ltfat(insig, mask, param, paramsolver,
 
 %% iPC DGT
 
-
 hatG = @(x, omega) param.D(param.R(param.G(x), omega));
 hatG_adj = @(u, omega) param.G_adj(param.R_adj(param.D_adj(u), omega));
-
 
 %%
 
@@ -65,7 +63,6 @@ if strcmp(param.type,'U')
     x_old = insig;
 
     snr_procedure = NaN(paramsolver.I, paramsolver.J);
-
     for j = 1:paramsolver.J
 
         [x_hat, snr_procedure(:, j)] = CP(param, paramsolver, oracle, mask);
@@ -77,9 +74,15 @@ if strcmp(param.type,'U')
         omega_x_hat = param.omega(x_hat);
         param.L = @(x) hatG(x, omega_x_hat);
         param.L_adj = @(u) hatG_adj(u, omega_x_hat);
-
+        
         x_old = x_hat;
-
+        if param.updateInputCP
+            paramsolver.x0 = x_hat;
+        end
     end
+    
     outsig = x_hat;
 end
+
+
+
