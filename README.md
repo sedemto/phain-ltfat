@@ -5,7 +5,7 @@ Computationally faster version of PHAIN [1].
 Reimplement PHAIN [1,2] such that fast routines of the LTFAT time-frequency toolbox [3] are utilized, resulting in a lower computational time while maintaining the reconstruction quality.
 
 ## Work done
-- Functions for the Gabor transform were substituted by optimized routines from the LTFAT toolbox. Computation of the Gabor transform is about 45 % faster this way, resulting in approximately **10 % total speedup** of PHAIN.
+- Functions for the Gabor transform were substituted by optimized routines from the LTFAT toolbox. Computation of the Gabor transform is about 48 % faster this way, resulting in approximately **10 % total speedup** of PHAIN.
 Beware that the original code treats the signal as non-periodic, while it is considered periodic by LTFAT. In effect, if a gap would be present near the signal border, the reconstruction would be different; otherwise, the results are identical (see demos below).
 - Projection to the reliable set has also been substituted by a more efficient code improving its computational speed by approximately 50 %. However, this improvement does not effect the total speedup due to its already fast computation.
 - In the outer loop, phase gets repeatedly updated. During an inspection of the code, we found out that when the signal fed into the CP algorithm (the inner loop) gets updated as well, it leads to better stabilisation of the Chambolle-Pock algorithm (see figure below). For some signals, it can also lead to better results. Instead of leaving it fixed as in the original code, we added an option to change it using the parameter `updateInputCP`.
@@ -18,7 +18,7 @@ The tests were run on signals from DPAI dataset available at [DPAI](https://gith
 - to prove that the reconstruction quality is the same for both implementations the `demo_reconstruction.m` can be run. It also computes the SNR of both reconstructions, measures the execution time for both implemetations, and produces the following image:
   <img width="1920" height="973" alt="comparisonLTFATvsOriginalpng" src="https://github.com/user-attachments/assets/93469f57-eb27-445b-a819-16ea215d6e02" />
 
-- to compare the difference in speed between the DGT from LTFAT and the DGT from the original code run `demo_DGT.m`. The table below is acquired. 
+- to compare the difference in speed between the DGT from LTFAT and the DGT from the original code run `demo_DGT.m`. The table below is acquired, which shows that on average the LTFAT implementaion is about 48 % faster. 
 
 | Test Number | DGT Original code [s] | DGT LTFAT code [s] | DGT Improvement [%] | iDGT Original code [s] | iDGT LTFAT code [s] | iDGT Improvement [%] | Both Original code [s] | Both LTFAT code [s] | Both Improvement [%] |
 |:--------------:|:------------------:|:---------------:|:---------------------:|:------------------:|:---------------:|:---------------------:|:------------------:|:---------------:|:---------------------:|
