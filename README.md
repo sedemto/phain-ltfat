@@ -37,7 +37,7 @@ The tests were run on signals from DPAI dataset available at [DPAI](https://gith
 - to compare the differences between the projections a small demo called `demo_proj.m` was used.
 - SNR of the reconstructed signals with the parameter `updateInputCP = false` (blue) and `updateInputCP = true` (orange):
 <img width="1920" height="973" alt="diffWithWithoutUpdate" src="https://github.com/user-attachments/assets/0c148e33-5230-4809-bcf6-a035377c6256" />
-### Notes
+## Notes
 The `main.m` function in `U-PHAIN` folder can be used to process datasets in bulk with the default option being the DPAI dataset.
 
 Even though LTFAT has functions for the calculation of instantaneous frequency, the original functions "calcInstFreq", "instPhaseCorrection" and "invInstPhaseCorrection" from [1] were utilized due to faster computational time.
