@@ -6,12 +6,13 @@ Reimplement PHAIN [1,2] such that fast routines of the LTFAT time-frequency tool
 
 ## Work done
 - Functions for the Gabor transform were substituted by optimized routines from the LTFAT toolbox. Computation of the Gabor transform is about 45 % faster this way, resulting in approximately **10 % total speedup** of PHAIN.
-Beware that the original code treats the signal as non-periodic, while it is considered periodic by LTFAT. In effect, if a gap would be present near the signal border, the reconstruction would be different; otherwise, the results are identical (see demo below).
-- Projection to the reliable set has also been substituted by a more efficient code improving its computational speed by approximately 70 %. However, this improvement does not effect the total speedup due to its already fast computation. 
-- paramsolver.x0?
+Beware that the original code treats the signal as non-periodic, while it is considered periodic by LTFAT. In effect, if a gap would be present near the signal border, the reconstruction would be different; otherwise, the results are identical (see demos below).
+- Projection to the reliable set has also been substituted by a more efficient code improving its computational speed by approximately 50 %. However, this improvement does not effect the total speedup due to its already fast computation.
+- In the outer loop, phase gets repeatedly updated. During an inspection of the code, we found out that when the signal fed into the CP algorithm (the inner loop) gets updated as well, it leads to better stabilisation of the Chambolle-Pock algorithm (see figure below). For some signals, it can also lead to better results. Instead of leaving it fixed as in the original code, we added an option to change it using a parameter called "updateInputCP".
 
 ## Experiment
 The experiment was run to prove the goals, i.e. speedup not affecting the quality. The original and the optimized implementation was run on the same signal with the same gaps in the signal. Elapsed time was measured by the tic/toc commands, and the reconstruction quality was measured using the SNR only in the gaps.
+
 
 The tests were run on signals from DPAI dataset available at [DPAI](https://github.com/fmiotello/dpai). Multiple tests were done, all codes available in the `demos` folder :
 - to compare the difference in speed between the DGT from LTFAT and the DGT from the original code run `demo_DGT.mat`. The table below is acquired. 
@@ -31,9 +32,13 @@ The tests were run on signals from DPAI dataset available at [DPAI](https://gith
 | **Average**  | 4.1697           | 2.3162   |**44.3590**       | 4.8906       | 2.3581   | **51.7449**      | 9.2955       | 4.7995   | **48.2878**      |
 
 - to compare the differences between the projections a small demo called `demo_proj.mat` was used.
--  
+- comparison between a signal with the parameter `updateInputCP = false` and `updateInputCP = true`:
+<img width="1920" height="973" alt="diffWithWithoutUpdate" src="https://github.com/user-attachments/assets/7594183b-ae3c-4104-8628-f25465990e32" />
+
 ...
 
+
+Even though LTFAT has functions for the calculation of instantaneous frequency, the original functions "calcInstFreq", "instPhaseCorrection" and "invInstPhaseCorrection" from [1] were utilized due to faster computational time.
 Tests were run in Matlab 2024b on PC with Intel Core i7-6829HQ CPU @2.7GHz, 16 GB RAM and Windows 10. The Matlab codes use the Signal Processing Toolbox and LTFAT [3].
 
 ## References
