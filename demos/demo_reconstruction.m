@@ -205,11 +205,14 @@ for nn = 1:NN
             legend("","LTFAT PHAIN","original PHAIN","groundtruth")
             xlabel("Samples in gap")
             ylabel("Amplitude")
-
+            
             solution.U_PHAIN{nn, m}(idx) = segment.solution(st:ed)*segment.max;
 
+            snr_original = snr(segment.data(~segment.mask),segment.data(~segment.mask)-segment.solution_PHAIN(~segment.mask));
+            snr_ltfat = snr(segment.data(~segment.mask),segment.data(~segment.mask)-segment.solution(~segment.mask));
+
+            disp("SNR of the reconstruction the original code: " + snr_original)
+            disp("SNR of the reconstruction using the LTFAT code: " + snr_ltfat)
         end
     end
-
 end
-
