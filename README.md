@@ -16,7 +16,8 @@ The experiment was run to prove the goals, i.e. speedup not affecting the qualit
 
 The tests were run on signals from DPAI dataset available at [DPAI](https://github.com/fmiotello/dpai). Multiple tests were done, all codes available in the `demos` folder :
 - to prove that the reconstruction quality is the same for both implementations the `demo_reconstruction.m` can be run. It produces the following image:
-  
+  <img width="1920" height="973" alt="comparisonLTFATvsOriginalpng" src="https://github.com/user-attachments/assets/93469f57-eb27-445b-a819-16ea215d6e02" />
+
 - to compare the difference in speed between the DGT from LTFAT and the DGT from the original code run `demo_DGT.m`. The table below is acquired. 
 
 | Test Number | DGT Original code [s] | DGT LTFAT code [s] | DGT Improvement [%] | iDGT Original code [s] | iDGT LTFAT code [s] | iDGT Improvement [%] | Both Original code [s] | Both LTFAT code [s] | Both Improvement [%] |
