@@ -34,7 +34,7 @@ rng(0)
 
 addpath(genpath('../dataset/'))
 %% loading
-soundDir = "../dataset/DPAI_originals/*0";
+soundDir = "../dataset/DPAI_originals/";
 ext = ".wav";
 Sounds = dir(soundDir + "*" + ext);
 NN = length(Sounds);
