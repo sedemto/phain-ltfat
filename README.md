@@ -1,10 +1,11 @@
 # PHAIN implementation using LTFAT
 Computationally faster version of PHAIN [1].
+
 ## Goal
 Reimplement PHAIN [1,2] such that fast routines of the LTFAT time-frequency toolbox [3] are utilized, resulting in a lower computational time while maintaining the reconstruction quality.
 
 ## Work done
-- Functions for the Gabor transform were substituted by optimized routines from the LTFAT toolbox. Computation of the Gabor transform is about 35 % faster this way, resulting in approximately **10 % total speedup** of PHAIN.
+- Functions for the Gabor transform were substituted by optimized routines from the LTFAT toolbox. Computation of the Gabor transform is about 45 % faster this way, resulting in approximately **10 % total speedup** of PHAIN.
 Beware that the original code treats the signal as non-periodic, while it is considered periodic by LTFAT. In effect, if a gap would be present near the signal border, the reconstruction would be different; otherwise, the results are identical (see demo below).
 - Projection to the reliable set has also been substituted by a more efficient code improving its computational speed by approximately 70 %. However, this improvement does not effect the total speedup due to its already fast computation. 
 - paramsolver.x0?
@@ -12,11 +13,11 @@ Beware that the original code treats the signal as non-periodic, while it is con
 ## Experiment
 The experiment was run to prove the goals, i.e. speedup not affecting the quality. The original and the optimized implementation was run on the same signal with the same gaps in the signal. Elapsed time was measured by the tic/toc commands, and the reconstruction quality was measured using the SNR only in the gaps.
 
-The tests were run on signals from DPAI dataset available in `dataset` folder. Multiple tests were done:
-- to compare the difference in speed between the DGT from LTFAT and the DGT from the original code run **demo_DGT.mat** in `demos` folder
+The tests were run on signals from DPAI dataset available at [DPAI](https://github.com/fmiotello/dpai). Multiple tests were done, all codes available in the `demos` folder :
+- to compare the difference in speed between the DGT from LTFAT and the DGT from the original code run `demo_DGT.mat`. The table below is acquired. 
 
-| Test Number | DGT Original [s] | DGT LTFAT [s] | DGT Improvement [%] | iDGT Original [s] | iDGT LTFAT [s] | iDGT Improvement [%] | Both Original [s] | Both LTFAT [s] | Both Improvement [%] |
-|--------------|------------------|---------------|---------------------|------------------|---------------|---------------------|------------------|---------------|---------------------|
+| Test Number | DGT Original code [s] | DGT LTFAT code [s] | DGT Improvement [%] | iDGT Original code [s] | iDGT LTFAT code [s] | iDGT Improvement [%] | Both Original code [s] | Both LTFAT code [s] | Both Improvement [%] |
+|:--------------:|:------------------:|:---------------:|:---------------------:|:------------------:|:---------------:|:---------------------:|:------------------:|:---------------:|:---------------------:|
 | 1            | 4.2116           | 2.2901       | 45.6249            | 5.1495           | 2.2625       | 56.0634            | 9.3007           | 4.4351       | 52.3139            |
 | 2            | 4.0899           | 2.3402       | 42.7820            | 4.9792           | 2.4354       | 51.0895            | 9.7830           | 4.8119       | 50.8131            |
 | 3            | 4.7095           | 2.3324       | 50.4758            | 5.0017           | 2.3381       | 53.2544            | 9.2260           | 4.7211       | 48.8278            |
@@ -29,6 +30,8 @@ The tests were run on signals from DPAI dataset available in `dataset` folder. M
 | 10           | 4.0874           | 2.2765       | 44.3031            | 4.7099           | 2.2437       | 52.3615            | 8.9211           | 4.4772       | 49.8134            |
 | **Average**  | 4.1697           | 2.3162   |**44.3590**       | 4.8906       | 2.3581   | **51.7449**      | 9.2955       | 4.7995   | **48.2878**      |
 
+- to compare the differences between the projections a small demo called `demo_proj.mat` was used.
+-  
 ...
 
 Tests were run in Matlab 2024b on PC with Intel Core i7-6829HQ CPU @2.7GHz, 16 GB RAM and Windows 10. The Matlab codes use the Signal Processing Toolbox and LTFAT [3].
