@@ -138,3 +138,5 @@ end
 test_times{:,3} = 100 - test_times{:,2}./test_times{:,1}*100;
 test_times{:,6} = 100 - test_times{:,5}./test_times{:,4}*100;
 test_times{:,9} = 100 -test_times{:,8}./test_times{:,7}*100;
+
+disp(test_times)
