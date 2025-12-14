@@ -50,9 +50,8 @@ soft = @(z, lambda) sign(z).*max(abs(z) - lambda, 0);
 param.proj = @(x) x.*(1-mask) + insig.*mask;
 
 if strcmp(param.type,'U')
-    sigma = paramsolver.sigma;
     lambda = paramsolver.lambda;
-    param.prox = @(z) soft(z, lambda/sigma);
+    param.prox = @(z) soft(z, lambda);
 
     omega_y = param.omega(insig);
     param.L = @(x) hatG(x, omega_y);
