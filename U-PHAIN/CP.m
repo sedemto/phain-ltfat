@@ -33,7 +33,7 @@ snr_procedure = NaN(paramsolver.I, 1);
 
 for i = 1:paramsolver.I
 
-    p = param.proj(x - tau*sigma*param.L_adj(u));
+    p = param.proj(x - tau*param.L_adj(u));
     v = u + param.L(2*p - x);
     q = v - param.prox(v);
     
