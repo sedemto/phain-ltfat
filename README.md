@@ -1,4 +1,4 @@
-<img width="97" height="30" alt="image" src="https://github.com/user-attachments/assets/cdecfc59-d049-49d2-b44b-a24e8abf8d41" /># PHAIN implementation using LTFAT
+# PHAIN implementation using LTFAT
 Computationally faster version of PHAIN [1].
 
 ## Goal
