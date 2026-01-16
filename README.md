@@ -5,8 +5,7 @@ Computationally faster version of PHAIN [1].
 Reimplement PHAIN [1,2] such that fast routines of the LTFAT time-frequency toolbox [3] are utilized, resulting in a lower computational time while maintaining the reconstruction quality.
 
 ## Work done
-- Functions for the Gabor transform were substituted by optimized routines from the [LTFAT toolbox](https://github.com/ltfat/ltfat/releases). Computation of the Gabor transform is about 22 % faster this way.
-- Beware that the original code treats the signal as non-periodic, while it is considered periodic by the LTFAT. In effect, if a gap would be present near the signal border, the reconstruction would be different; otherwise, the results are identical (see demos below).
+- Functions for the Gabor transform were substituted by optimized routines from the [LTFAT toolbox](https://github.com/ltfat/ltfat/releases). Computation of the Gabor transform is about 22 % faster this way. Beware that the original code treats the signal as non-periodic, while it is considered periodic by the LTFAT. In effect, if a gap would be present near the signal border, the reconstruction would be different; otherwise, the results are identical (see demos below).
 - Time-directional variation operator D and its adjoint operator D* are calculated using Matlab `diff` function, which results in approximately 43 % speed up compared with the ones in the original algortihm. Similarly, phase correction R and its adjoint R* are written differently, which speeds up their computation by approximately 27 %.
 - Projection to the reliable set has also been substituted by a more efficient code improving its computational speed by approximately 33 %. However, this improvement does not effect the total speedup due to its negligible share on the total time.
 - All of the changes result in approximately **22 % total speedup** of PHAIN.
