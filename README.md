@@ -36,7 +36,8 @@ The reconstructions are practically identical and they result in SNRs 3.7397 and
 | 10 | 1.1189 | 0.9781 | 12.5870 | 1.4315 | 0.9795 | 31.5750 | 2.5727 | 1.9844 | 22.8650 |
 | **Average**  | 1.0993 | 0.9793 |**10.9068** | 1.4266 | 0.9786 | **31.4042** | 2.5386 | 1.9711 | **22.3514** |
 
-- To compare the differences between the phase correction and time-directional variation the demos `demo_phaseCor.m` and `demo_timeVariation` were used. 
+- To compare the differences between the phase corrections a demo called `demo_phaseCor.m` was used.
+- Similarly, to compare the differences between the time-directional variations a demo called `demo_timeVariation` was used. 
 - To compare the differences between the projections a small demo called `demo_proj.m` was used.
 - The SNR in the course of iterations; comparison between reconstruction with `updateInputCP = false` (blue) and `updateInputCP = true` (orange) :
 <img width="1920" height="973" alt="diffWithWithoutUpdate" src="https://github.com/user-attachments/assets/0c148e33-5230-4809-bcf6-a035377c6256" />
