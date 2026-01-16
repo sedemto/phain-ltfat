@@ -25,7 +25,6 @@ x = paramsolver.x0;
 u = paramsolver.u0;
 
 tau = paramsolver.tau;
-sigma = paramsolver.sigma;
 alpha = paramsolver.alpha;
 
 snr_procedure = NaN(paramsolver.I, 1);
