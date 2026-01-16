@@ -20,7 +20,7 @@ The tests were run on signals from the [DPAI dataset](https://github.com/fmiotel
   <img width="1920" height="973" alt="comparisonLTFATvsOriginalpng" src="https://github.com/user-attachments/assets/93469f57-eb27-445b-a819-16ea215d6e02" />
 The reconstructions are practically identical and they result in SNRs 3.7397 and 3.7397, respectively.
 
-- To compare the difference in speed between the DGT from LTFAT and the DGT from the original code run `demo_DGT.m`. The table below is acquired, which shows that on average, the LTFAT implementaion is about 48 % faster. 
+- To compare the difference in speed between the DGT from LTFAT and the DGT from the original code run `demo_DGT.m`. The table below is acquired, which shows that on average, the LTFAT implementaion is about 22 % faster.
 
 | Test Number | DGT Original code [s] | DGT LTFAT code [s] | DGT Improvement [%] | iDGT Original code [s] | iDGT LTFAT code [s] | iDGT Improvement [%] | Both Original code [s] | Both LTFAT code [s] | Both Improvement [%] |
 |:--------------:|:------------------:|:---------------:|:---------------------:|:------------------:|:---------------:|:---------------------:|:------------------:|:---------------:|:---------------------:|
@@ -36,6 +36,7 @@ The reconstructions are practically identical and they result in SNRs 3.7397 and
 | 10 | 1.1189 | 0.9781 | 12.5870 | 1.4315 | 0.9795 | 31.5750 | 2.5727 | 1.9844 | 22.8650 |
 | **Average**  | 1.0993 | 0.9793 |**10.9068** | 1.4266 | 0.9786 | **31.4042** | 2.5386 | 1.9711 | **22.3514** |
 
+- To compare the differences between the phase correction and time-directional variation the demos `demo_phaseCor.m` and `demo_timeVariation` were used. 
 - To compare the differences between the projections a small demo called `demo_proj.m` was used.
 - The SNR in the course of iterations; comparison between reconstruction with `updateInputCP = false` (blue) and `updateInputCP = true` (orange) :
 <img width="1920" height="973" alt="diffWithWithoutUpdate" src="https://github.com/user-attachments/assets/0c148e33-5230-4809-bcf6-a035377c6256" />
