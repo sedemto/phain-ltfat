@@ -89,11 +89,10 @@ param.G_diff = @(x) comp_sepdgtreal(x, g_diff, a, M, phasetype);
 % definition of instantaneous frequency (omega)
 param.omega = @(x) calcInstFreq(param.G(x), param.G_diff(x), M, w);
 
-% def.of phase correction (R) and time-directional difference (D)
-param.R = @(z, omega) instPhaseCorrection(z, omega, a, M);
-param.R_adj =  @(z, omega) invInstPhaseCorrection(z, omega, a, M);
-param.D = @(z) z(:,1:end-1) - z(:,2:end);
-param.D_adj = @(z) [z(:,1), (z(:,2:end) - z(:,1:end-1)), -z(:,end)];
+% definition of phase rotations and time-directional difference (D)
+param.phaseCor = @(omega) rotations(omega, a, M);
+param.D = @(z) -diff(z,1,2);
+param.D_adj = @(z) [z(:,1), (diff(z,1,2)), -z(:,end)];
 
 
 % settings for generalized CP algorithm
@@ -215,4 +214,15 @@ for nn = 1:NN
             disp("SNR of the reconstruction using the LTFAT code: " + snr_ltfat)
         end
     end
+end
+
+%% functions
+function phaseCor = rotations(IF,shiftLen,fftLen)
+    % Calculating phase rotations for phase-corrected spectrogram.
+    
+    sigLen = shiftLen*size(IF,2); % L (= a * N) : signal length
+    freqShift = sigLen/fftLen;    % b (= L / M) : frequency stepsize
+    
+    idxVariation = freqShift*IF*shiftLen/sigLen;   % b * delta * a / L (in Eq. (29) of [1])
+    phaseCor = 2*pi*mod(cumsum(idxVariation,2),1); % mod for avoiding huge value
 end

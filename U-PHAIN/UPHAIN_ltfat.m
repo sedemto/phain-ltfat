@@ -28,7 +28,7 @@ function [outsig, snr_procedure] = UPHAIN_ltfat(insig, mask, param, paramsolver,
 
 
 % paramsolver
-%   .sigma .... step size
+%   .sigma .... step size (can be ommited when using soft thresholding)
 %   .tau ...... step size
 %   .alpha .... relaxation paramter
 %   .lambda ... threshold
@@ -39,27 +39,33 @@ function [outsig, snr_procedure] = UPHAIN_ltfat(insig, mask, param, paramsolver,
 %   .J ........ number of outer iterations
 
 
-%% iPC DGT
-
-hatG = @(x, omega) param.D(param.R(param.G(x), omega));
-hatG_adj = @(u, omega) param.G_adj(param.R_adj(param.D_adj(u), omega));
-
 %%
-
+% note that when using soft sigma can be ommited
+lambda = paramsolver.lambda;
 soft = @(z, lambda) sign(z).*max(abs(z) - lambda, 0);
+
+% define proximal operators
 param.proj = @(x) x.*(1-mask) + insig.*mask;
+param.prox = @(z) soft(z, lambda);
 
 if strcmp(param.type,'U')
-    sigma = paramsolver.sigma;
-    lambda = paramsolver.lambda;
-    param.prox = @(z) soft(z, lambda/sigma);
-
+    % calculate instantaneous frequency 
     omega_y = param.omega(insig);
-    param.L = @(x) hatG(x, omega_y);
-    param.L_adj = @(u) hatG_adj(u, omega_y);
+    
+    % setup operator R and its adjoint R*
+    phaseCor = exp(-1i*param.phaseCor(omega_y));
+    invPhaseCor = exp(1i*param.phaseCor(omega_y));
+    param.R = @(z) phaseCor.*z;
+    param.R_adj =  @(z) invPhaseCor.*z;
 
+    % combine operators inside the L1 norm into one: L=DRG, L*=G*R*D*
+    param.L = @(x) param.D(param.R(param.G(x)));
+    param.L_adj = @(u) param.G_adj(param.R_adj(param.D_adj(u)));
+    
+    % initialize parameters x0 and u0
     paramsolver.x0 = insig;
     paramsolver.u0 = zeros(size(param.L(zeros(length(insig), 1))));
+
     x_old = insig;
 
     snr_procedure = NaN(paramsolver.I, paramsolver.J);
@@ -70,12 +76,22 @@ if strcmp(param.type,'U')
         if norm(x_old - x_hat) < paramsolver.epsilon
             break
         end
-
+        
+        % caluculate new instFreq 
         omega_x_hat = param.omega(x_hat);
-        param.L = @(x) hatG(x, omega_x_hat);
-        param.L_adj = @(u) hatG_adj(u, omega_x_hat);
+        
+        % redefine R, R*, L and L* with new instFreq
+        phaseCor = exp(-1i*param.phaseCor(omega_x_hat));
+        invPhaseCor = exp(1i*param.phaseCor(omega_x_hat));
+        param.R = @(z) phaseCor.*z;
+        param.R_adj =  @(z) invPhaseCor.*z;
+
+        param.L = @(x) param.D(param.R(param.G(x)));
+        param.L_adj = @(u) param.G_adj(param.R_adj(param.D_adj(u)));
         
         x_old = x_hat;
+        
+        % set previous solution as the new initialization for CP
         if param.updateInputCP
             paramsolver.x0 = x_hat;
         end

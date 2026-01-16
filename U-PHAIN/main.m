@@ -24,7 +24,8 @@
 % all sections except "functions" were adapted from main.m in [1]
 %
 % the main difference between LTFAT PHAIN and the original PHAIN code is in
-% the "parameters" section, specifically the setup of a tight window and DGT
+% the "parameters" section, specifically the setup of a tight window and
+% definition of operators
 
 close all
 clear
@@ -96,11 +97,10 @@ param.G_diff = @(x) comp_sepdgtreal(x, g_diff, a, M, phasetype);
 % definition of instantaneous frequency (omega)
 param.omega = @(x) calcInstFreq(param.G(x), param.G_diff(x), M, w);
 
-% def.of phase correction (R) and time-directional difference (D)
-param.R = @(z, omega) instPhaseCorrection(z, omega, a, M);
-param.R_adj =  @(z, omega) invInstPhaseCorrection(z, omega, a, M);
-param.D = @(z) z(:,1:end-1) - z(:,2:end);
-param.D_adj = @(z) [z(:,1), (z(:,2:end) - z(:,1:end-1)), -z(:,end)];
+% definition of phase rotations and time-directional difference (D)
+param.phaseCor = @(omega) rotations(omega, a, M);
+param.D = @(z) -diff(z,1,2);
+param.D_adj = @(z) [z(:,1), (diff(z,1,2)), -z(:,end)];
 
 
 % settings for generalized CP algorithm
@@ -262,30 +262,6 @@ function IF = calcInstFreq(spec,diffSpec,fftLen,winLen,flooringCoeff)
     IF = (fftLen/winLen)*IF; % compensation necessary when "fftLen ~= winLen"
 end
 
-function iPCspec = instPhaseCorrection(spec,IF,shiftLen,fftLen)
-    % instPhaseCorrection: Calculating instantaneous-phase-corrected spectrogram.
-    
-    sigLen = shiftLen*size(IF,2); % L (= a * N) : signal length
-    freqShift = sigLen/fftLen;    % b (= L / M) : frequency stepsize
-    
-    idxVariation = freqShift*IF*shiftLen/sigLen;   % b * delta * a / L (in Eq. (29) of [1])
-    cumPhase = 2*pi*mod(cumsum(idxVariation,2),1); % mod for avoiding huge value
-    
-    iPCspec = exp(-1i*cumPhase).*spec; % implementation of Eq. (29) of [1]
-end
-
-function spec = invInstPhaseCorrection(iPCspec,IF,shiftLen,fftLen)
-    % invInstPhaseCorrection: Inverting instantaneous phase correction.
-    
-    sigLen = shiftLen*size(IF,2); % L (= a * N) : signal length
-    freqShift = sigLen/fftLen;    % b (= L / M) : frequency stepsize
-    
-    idxVariation = freqShift*IF*shiftLen/sigLen;   % b * delta * a / L (in Eq. (29) of [1])
-    cumPhase = 2*pi*mod(cumsum(idxVariation,2),1); % mod for avoiding huge value
-    
-    spec = exp(1i*cumPhase).*iPCspec; % inverting phase correction
-end
-
 function diffWin = numericalDiffWin(window,zeroPadLen)
     % Zero-padding for alleviating the periodic boundary effect
     if ~exist('zeroPadLen','var') || isempty(zeroPadLen)
@@ -304,4 +280,14 @@ function diffWin = numericalDiffWin(window,zeroPadLen)
     % Calculating spectral derivative
     diffWin = ifft(1i*fftIdx.*fft(longWin),'symmetric'); % spectral method
     diffWin = diffWin(1:winLen); % truncating padded zeros
+end
+
+function phaseCor = rotations(IF,shiftLen,fftLen)
+    % Calculating phase rotations for phase-corrected spectrogram.
+    
+    sigLen = shiftLen*size(IF,2); % L (= a * N) : signal length
+    freqShift = sigLen/fftLen;    % b (= L / M) : frequency stepsize
+    
+    idxVariation = freqShift*IF*shiftLen/sigLen;   % b * delta * a / L (in Eq. (29) of [1])
+    phaseCor = 2*pi*mod(cumsum(idxVariation,2),1); % mod for avoiding huge value
 end
