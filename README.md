@@ -1,15 +1,16 @@
-# PHAIN implementation using LTFAT
+<img width="97" height="30" alt="image" src="https://github.com/user-attachments/assets/cdecfc59-d049-49d2-b44b-a24e8abf8d41" /># PHAIN implementation using LTFAT
 Computationally faster version of PHAIN [1].
 
 ## Goal
 Reimplement PHAIN [1,2] such that fast routines of the LTFAT time-frequency toolbox [3] are utilized, resulting in a lower computational time while maintaining the reconstruction quality.
 
 ## Work done
-- Functions for the Gabor transform were substituted by optimized routines from the [LTFAT toolbox](https://github.com/ltfat/ltfat/releases). Computation of the Gabor transform is about 22 % faster this way, resulting in approximately **10 % total speedup** of PHAIN.
-Beware that the original code treats the signal as non-periodic, while it is considered periodic by the LTFAT. In effect, if a gap would be present near the signal border, the reconstruction would be different; otherwise, the results are identical (see demos below).
-- Projection to the reliable set has also been substituted by a more efficient code improving its computational speed by approximately 50 %. However, this improvement does not effect the total speedup due to its negligible share on the total time.
+- Functions for the Gabor transform were substituted by optimized routines from the [LTFAT toolbox](https://github.com/ltfat/ltfat/releases). Computation of the Gabor transform is about 22 % faster this way.
+- Beware that the original code treats the signal as non-periodic, while it is considered periodic by the LTFAT. In effect, if a gap would be present near the signal border, the reconstruction would be different; otherwise, the results are identical (see demos below).
+- Time-directional variation operator D and its adjoint operator D* are calculated using Matlab `diff` function, which results in approximately 43 % speed up compared with the ones in the original algortihm. Similarly, phase correction R and its adjoint R* are written differently, which speeds up their computation by approximately 27 %.
+- Projection to the reliable set has also been substituted by a more efficient code improving its computational speed by approximately 33 %. However, this improvement does not effect the total speedup due to its negligible share on the total time.
+- All of the changes result in approximately **22 % total speedup** of PHAIN.
 - In the outer loop, the instanteneous frequency gets repeatedly updated. During an inspection of the original code, we found out that when the signal fed into the CP algorithm (the inner loop) gets updated as well, opposite to the original code, it leads to a stabilisation of the Chambolle-Pock algorithm (see the figure below). For some signals, it can also lead to better results. Instead of leaving it fixed as in the original code, we added a switch `updateInputCP`.
-- Time-directional variation operator D and its adjoint operator D* are calculated using Matlab `diff` function, which results in approximately XX % speed up of the CP algortihm. Similarly, phase correction R and its adjoint R* are written differently to speed up the CP algortihm by approximately XX %. Together, these changes provide a total speedup of XX %. 
 
 ## Experiment
 The experiment was run to prove the goals, i.e. achieving a speedup not affecting the quality. The original and the optimized implementation was run on the same signal with the same gaps in the signal. Elapsed time was measured by the tic/toc commands, and the reconstruction quality was measured using the SNR (solely in the gaps).
@@ -43,7 +44,7 @@ The reconstructions are practically identical and they result in SNRs 3.7397 and
 ### Notes
 The `main.m` function in `U-PHAIN` folder can be used to process datasets in bulk with the default option being the DPAI dataset.
 
-Even though LTFAT offers functions for the calculation of instantaneous frequency, the original functions "calcInstFreq", "instPhaseCorrection" and "invInstPhaseCorrection" from [1] were utilized due to their faster computational time.
+Even though LTFAT offers functions for the calculation of instantaneous frequency, the original function "calcInstFreq" from [1] was utilized due to its faster computational time.
 
 The percentages change depending on the particular computer for the experiments.
 
