@@ -5,7 +5,7 @@ Computationally faster version of PHAIN [1].
 Reimplement PHAIN [1,2] such that fast routines of the LTFAT time-frequency toolbox [3] are utilized, resulting in a lower computational time while maintaining the reconstruction quality.
 
 ## Work done
-- Functions for the Gabor transform were substituted by optimized routines from the [LTFAT toolbox](https://github.com/ltfat/ltfat/releases). Computation of the Gabor transform is about 22 % faster this way. Beware that the original code treats the signal as non-periodic, while it is considered periodic by the LTFAT. In effect, if a gap would be present near the signal border, the reconstruction would be different; otherwise, the results are identical (see demos below).
+- Functions for the Gabor transform were substituted by optimized routines from the [LTFAT toolbox](https://github.com/ltfat/ltfat/releases). Computation of the Gabor transform is about 22 % faster this way. Beware that the original code treats the signal as non-periodic, while it is considered periodic by the LTFAT. In effect, if a gap would be present close to the signal border, the reconstruction would be different; otherwise, the results are identical (see demos below).
 - Phase correction R and its adjoint R* are written differently. Even though the instantaneous frequency is fixed inside the Chambolle-Pock algorithm (CPA), the phase rotations were originally calculated in each iteration, which was unnecessary. Now, the phase rotations are calculated in the outer loop, which speeds up the computation of R and R* by approximately 27 %.
 - Projection to the reliable set has also been substituted by a more efficient code improving its computational speed by approximately 33 %. However, this improvement does not effect the total speedup due to its negligible share on the total time.
 - Time-directional variation operator D and its adjoint operator D* are calculated using Matlab `diff` function, which results in approximately 43 % speed up compared with the ones in the original algortihm.
@@ -13,7 +13,7 @@ Reimplement PHAIN [1,2] such that fast routines of the LTFAT time-frequency tool
 - In the outer loop, the instanteneous frequency gets repeatedly updated. During an inspection of the original code, we found out that when the signal fed into the CP algorithm (the inner loop) gets updated as well, opposite to the original code, it leads to a stabilisation of the Chambolle-Pock algorithm (see the figure below). For some signals, it can also lead to better results. Instead of leaving it fixed as in the original code, we added a switch `updateInputCP`.
 
 ## Experiment
-The experiment was run to prove the goals, i.e. achieving a speedup not affecting the quality. The original and the optimized implementation was run on the same signal with the same gaps in the signal. Elapsed time was measured by the tic/toc commands, and the reconstruction quality was measured using the SNR (solely in the gaps).
+The experiment was run to prove the goals, i.e. achieving a speedup not affecting the quality. The original and the optimized implementation were run on the same signal with the same gaps in the signal. Elapsed time was measured by the tic/toc commands, and the reconstruction quality was measured using the SNR (solely in the gaps).
 
 
 The tests were run on signals from the [DPAI dataset](https://github.com/fmiotello/dpai). Multiple tests were performed, all codes available in the `demos` folder :
@@ -53,8 +53,8 @@ The percentages change depending on the particular computer for the experiments.
 Tests were run in Matlab 2025a on PC with AMD Ryzen 9 9900X, 4.4 GHz, 64 GB RAM and Windows 11. The Matlab codes use the Signal Processing Toolbox and the [LTFAT toolbox](https://github.com/ltfat/ltfat/releases) [3].
 
 ## References
-[1] Tanaka, Tomoro, Kohei Yatabe, and Yasuhiro Oikawa, “PHAIN: Audio inpainting via phase-aware optimization with instantaneous frequency,” IEEE/ACM Transactions on Audio, Speech, and Language Processing, Sep 2024.
+[1] Tomoro Tanaka, Kohei Yatabe, and Yasuhiro Oikawa, “PHAIN: Audio inpainting via phase-aware optimization with instantaneous frequency,” IEEE/ACM Transactions on Audio, Speech, and Language Processing, Sep 2024.
 
-[2] TomoroTanaka, “TomoroTanaka/PHAIN: v1.0.1”. Zenodo, Jun. 30, 2024. doi:10.5281/zenodo.12597334.
+[2] Tomoro Tanaka, “TomoroTanaka/PHAIN: v1.0.1”. Zenodo, Jun. 30, 2024. doi:10.5281/zenodo.12597334.
 
 [3] Zdeněk Průša, Peter L. Søndergaard, Nicki Holighaus, Christoph Wiesmeyr, Peter Balazs, “The Large Time-Frequency Analysis Toolbox 2.0,” Sound, Music, and Motion, Lecture Notes in Computer Science 2014, pp 419-442.
